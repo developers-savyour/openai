@@ -16,7 +16,6 @@ composer require developerssavyour/openai
 
 Next, publish the configuration file:
 
-## Usage
 ```bash
 php artisan vendor:publish --provider="DevelopersSavyour\OpenAI\OpenAIServiceProvider"
 ```
@@ -25,6 +24,7 @@ Or for Lumen Project manually add service provider: "DevelopersSavyour\OpenAI\Op
 ```bash
 composer dump-autoload
 ```
+## Usage
 
 ### Testing
 
