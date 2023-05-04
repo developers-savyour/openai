@@ -11,7 +11,7 @@ It is the package to integrate OpenAI api with laravel.
 You can install the package via composer:
 
 ```bash
-composer require developerssavyour/openai
+composer require developerssavyour/open-ai
 ```
 
 Next, publish the configuration file:
