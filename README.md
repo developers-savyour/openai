@@ -1,10 +1,10 @@
-# Very short description of the package
+# Open AI API Integration with Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/developerssavyour/openai.svg?style=flat-square)](https://packagist.org/packages/developerssavyour/openai)
 [![Total Downloads](https://img.shields.io/packagist/dt/developerssavyour/openai.svg?style=flat-square)](https://packagist.org/packages/developerssavyour/openai)
 ![GitHub Actions](https://github.com/developerssavyour/openai/actions/workflows/main.yml/badge.svg)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+It is the package to integrate OpenAI api with laravel.
 
 ## Installation
 
@@ -14,10 +14,16 @@ You can install the package via composer:
 composer require developerssavyour/openai
 ```
 
-## Usage
+Next, publish the configuration file:
 
-```php
-// Usage description here
+## Usage
+```bash
+php artisan vendor:publish --provider="DevelopersSavyour\OpenAI\OpenAIServiceProvider"
+```
+Or for Lumen Project manually add service provider: "DevelopersSavyour\OpenAI\OpenAIServiceProvider" to bootstrap/app.php and run
+
+```bash
+composer dump-autoload
 ```
 
 ### Testing
