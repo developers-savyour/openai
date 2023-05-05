@@ -115,17 +115,16 @@ class OpenAIClient
      * @param string $model The name of the model to use.
      * @return array The embeddings for the text.
      */
-    public function createEmbeddings($text, $model)
+    public function createEmbeddings($input, $model="text-embedding-ada-002")
     {
-        if (is_array($text)) {
-            $data = ['documents' => $text];
-        } else {
-            $data = ['documents' => [$text]];
-        }
+        $data = [
+            "model" =>  $model,
+            "input" =>  $input,
+        ];
 
-        $response = $this->client->post('engines/'.$model.'/embeddings', [
+        $response = $this->client->post('embeddings', [
             'headers' => [
-                'Content-Type' => 'application/json',
+                'Content-Type: application/json',
                 'Authorization' => 'Bearer '.$this->apiKey,
             ],
             'json' => $data,
@@ -138,6 +137,28 @@ class OpenAIClient
         } else {
             throw new \RuntimeException('Failed to create embeddings: '.$result['error']);
         }
+    }
+
+
+    public function moderation($input)
+    {
+        $data = [
+            "input" =>  $input,
+        ];
+
+        $response = $this->client->post('moderations', [
+            'headers' => [
+                'Content-Type: application/json',
+                'Authorization' => 'Bearer '.$this->apiKey,
+            ],
+            'json' => $data,
+        ]);
+
+        $result = json_decode($response->getBody(), true);
+        if ($result['results'][0]['flagged']) {
+            throw new \RuntimeException('Use of explicit language is not allowed');
+        }
+        return;
     }
 
     /**
