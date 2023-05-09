@@ -64,6 +64,78 @@ class OpenAIClient
     }
 
     /**
+     * Generates text based on a prompt and the specified model.
+     *
+     * @param string $prompt The prompt to generate text from.
+     * @param string $model The name of the model to use.
+     * @param int $length The maximum length of the generated text.
+     * @param float $temperature The temperature to use for sampling.
+     * @param int $maxTokens The maximum number of tokens to generate.
+     * @param string|null $stop The stop sequence to use for text generation.
+     * @return string The generated text.
+     */
+    public function textCompletion($prompt, $model="text-davinci-003", $temperature = 0.7, $maxTokens = 500)
+    {
+        $data = [
+            'prompt' => $prompt,
+            'model' => $model,
+            'temperature' => $temperature,
+            'max_tokens' => $maxTokens,
+            'n' => 1,
+        ];
+
+        $response = $this->client->post('completions', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->apiKey,
+            ],
+            'json' => $data,
+        ]);
+
+        $result = json_decode($response->getBody(), true);
+
+        if (isset($result['choices'][0]['text'])) {
+            return $result['choices'][0]['text'];
+        } else {
+            throw new \RuntimeException('Failed to generate text: ' . $result['error']);
+        }
+    }
+
+    /**
+     * Creates a completion for the specified messages using the specified model.
+     *
+     * @param array $messages The list of messages to generate completion for.
+     * @param string $model The name of the model to use.
+     * @param array $parameters Additional parameters for the completion request.
+     * @return array The generated completion.
+     */
+    public function chatCompletion($messages, $model="gpt-3.5-turbo", $parameters = [])
+    {
+        $data = [
+            'messages' => $messages,
+            'model' => $model,
+            'temperature' => isset($parameters['temperature']) ? $parameters['temperature'] : 0.5,
+            'max_tokens' => isset($parameters['max_tokens']) ? $parameters['max_tokens'] : 60,
+        ];
+
+        $response = $this->client->post('chat/completions', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer '.$this->apiKey,
+            ],
+            'json' => $data,
+        ]);
+
+        $result = json_decode($response->getBody(), true);
+
+        if (isset($result['choices'][0]['message']['content'])) {
+            return $result['choices'][0]['message']['content'];
+        } else {
+            throw new \RuntimeException('Failed to create chat completion: '.$result['error']['message']);
+        }
+    }
+
+    /**
      * Retrieves a list of all available models.
      *
      * @return array The list of models.
