@@ -204,8 +204,8 @@ class OpenAIClient
 
         $result = json_decode($response->getBody(), true);
 
-        if (isset($result['data'][0]['embedding'])) {
-            return $result['data'][0]['embedding'];
+        if (isset($result['data'][0])) {
+            return $result['data'][0];
         } else {
             throw new \RuntimeException('Failed to create embeddings: '.$result['error']);
         }
