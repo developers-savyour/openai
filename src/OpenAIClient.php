@@ -92,13 +92,7 @@ class OpenAIClient
             'json' => $data,
         ]);
 
-        $result = json_decode($response->getBody(), true);
-
-        if (isset($result['choices'][0]['text'])) {
-            return $result['choices'][0]['text'];
-        } else {
-            throw new \RuntimeException('Failed to generate text: ' . $result['error']);
-        }
+        return json_decode($response->getBody(), true);
     }
 
     /**
@@ -126,13 +120,7 @@ class OpenAIClient
             'json' => $data,
         ]);
 
-        $result = json_decode($response->getBody(), true);
-
-        if (isset($result['choices'][0]['message']['content'])) {
-            return $result['choices'][0]['message']['content'];
-        } else {
-            throw new \RuntimeException('Failed to create chat completion: '.$result['error']['message']);
-        }
+        return json_decode($response->getBody(), true);
     }
 
     /**
