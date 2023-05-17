@@ -206,19 +206,39 @@ class OpenAIClient
             "input" =>  $input,
         ];
 
-        $response = $this->client->post('moderations', [
-            'headers' => [
-                'Content-Type: application/json',
-                'Authorization' => 'Bearer '.$this->apiKey,
-            ],
-            'json' => $data,
-        ]);
+        try {
+            $response = $this->client->post('moderations', [
+                'headers' => [
+                    'Content-Type: application/json',
+                    'Authorization' => 'Bearer '.$this->apiKey,
+                ],
+                'json' => $data,
+            ]);
 
-        $result = json_decode($response->getBody(), true);
-        if ($result['results'][0]['flagged']) {
-            throw new \RuntimeException('Use of explicit language is not allowed');
+            $result = json_decode($response->getBody(), true);
+
+            $success = false;
+            $message = '';
+            $data = [];
+
+            if (isset($result['results'])) {
+                $success = true;
+                $message = 'success';
+                $data['flagged'] = $result['results'][0]['flagged'];
+            }
+
+            return [
+                'success' => $success,
+                'message' => $message,
+                'data' => $data
+            ];
+        } catch (\Exception $ex) {
+            return [
+                'success' => false,
+                'message' => $ex->getMessage(),
+                'data' => []
+            ];
         }
-        return;
     }
 
     /**
